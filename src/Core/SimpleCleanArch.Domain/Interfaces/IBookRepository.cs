@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SimpleCleanArch.Domain.Entities;
 
 namespace SimpleCleanArch.Domain.Interfaces
 {
     public interface IBookRepository : IRepository<Book>
     {
+        Task<IEnumerable<Book>> GetTop10Async();
         Task<Book> GetBookWithDetailsAsync(int id);
         Task<IEnumerable<Book>> GetBooksByCategoryAsync(int categoryId);
         Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId);
@@ -16,4 +15,4 @@ namespace SimpleCleanArch.Domain.Interfaces
         Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId);
         Task<IEnumerable<Book>> GetBooksByKeywordIdAsync(int keywordId);
     }
-} 
+}

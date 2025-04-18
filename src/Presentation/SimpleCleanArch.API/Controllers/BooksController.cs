@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCleanArch.Application.Common.Exceptions;
 using SimpleCleanArch.Application.DTOs;
@@ -23,7 +20,17 @@ namespace SimpleCleanArch.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetAll()
         {
+            var books = await _bookService.GetTop10BooksAsync();
+            return Ok(books);
+        }
+
+
+        [HttpGet("GetTop10")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetTop10()
+        {
             var books = await _bookService.GetAllBooksAsync();
+
             return Ok(books);
         }
 
@@ -129,4 +136,4 @@ namespace SimpleCleanArch.API.Controllers
             }
         }
     }
-} 
+}

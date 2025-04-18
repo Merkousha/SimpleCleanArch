@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SimpleCleanArch.Domain.Entities;
 using SimpleCleanArch.Domain.Interfaces;
-using SimpleCleanArch.Infrastructure.Data;
-using System.Linq.Expressions;
 
 namespace SimpleCleanArch.Infrastructure.Repositories
 {
@@ -23,6 +19,20 @@ namespace SimpleCleanArch.Infrastructure.Repositories
                 .Include(b => b.Keywords)
                 .Include(b => b.RelatedBooks)
                     .ThenInclude(br => br.RelatedBook)
+                .ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<Book>> GetTop10Async()
+        {
+            return await _dbSet
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .Include(b => b.Keywords)
+                .Include(b => b.RelatedBooks)
+                    .ThenInclude(br => br.RelatedBook)
+                .OrderByDescending(b => b.CreatedAt)
+                .Take(10)
                 .ToListAsync();
         }
 
@@ -155,4 +165,4 @@ namespace SimpleCleanArch.Infrastructure.Repositories
                 .ToListAsync();
         }
     }
-} 
+}

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using SimpleCleanArch.Domain.Entities;
 
 namespace SimpleCleanArch.Domain.Interfaces
 {
@@ -16,4 +12,4 @@ namespace SimpleCleanArch.Domain.Interfaces
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
     }
-} 
+}

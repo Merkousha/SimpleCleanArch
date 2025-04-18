@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SimpleCleanArch.Application.DTOs;
 
 namespace SimpleCleanArch.Application.Interfaces
@@ -7,6 +5,7 @@ namespace SimpleCleanArch.Application.Interfaces
     public interface IBookService
     {
         Task<IEnumerable<BookDto>> GetAllBooksAsync();
+        Task<IEnumerable<BookDto>> GetTop10BooksAsync();
         Task<BookDto> GetBookByIdAsync(int id);
         Task<BookDto> GetBookBySlugAsync(string slug);
         Task<IEnumerable<BookDto>> GetBooksByCategoryIdAsync(int categoryId);
@@ -15,4 +14,4 @@ namespace SimpleCleanArch.Application.Interfaces
         Task UpdateBookAsync(int id, BookUpdateDto bookUpdateDto);
         Task DeleteBookAsync(int id);
     }
-} 
+}

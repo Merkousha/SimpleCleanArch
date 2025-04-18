@@ -40,6 +40,10 @@ namespace SimpleCleanArch.Application.Validators
             RuleFor(x => x.CategoryId)
                 .GreaterThan(0)
                 .WithMessage("Category ID must be greater than 0");
+
+            RuleFor(x => x.AuthorId)
+                .GreaterThan(0)
+                .WithMessage("Author ID must be greater than 0");
         }
     }
 } 
