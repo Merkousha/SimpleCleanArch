@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleCleanArch.Domain.Entities;
+using SimpleCleanArch.Domain.Interfaces;
 
 namespace SimpleCleanArch.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -14,61 +15,48 @@ namespace SimpleCleanArch.Infrastructure.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
-        public DbSet<BookAuthor> BookAuthors { get; set; }
-        public DbSet<BookKeyword> BookKeywords { get; set; }
         public DbSet<BookRelation> BookRelations { get; set; }
+
+        void IApplicationDbContext.Update<TEntity>(TEntity entity)
+        {
+            base.Update(entity);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure many-to-many relationships
-            modelBuilder.Entity<BookAuthor>()
-                .HasKey(ba => new { ba.BookId, ba.AuthorId });
-
-            modelBuilder.Entity<BookKeyword>()
-                .HasKey(bk => new { bk.BookId, bk.KeywordId });
-
-            modelBuilder.Entity<BookRelation>()
-                .HasKey(br => new { br.BookId, br.RelatedBookId });
-
-            // Configure relationships
-            modelBuilder.Entity<Book>()
-                .HasOne(b => b.Category)
-                .WithMany(c => c.Books)
-                .HasForeignKey(b => b.CategoryId);
-
-            modelBuilder.Entity<BookAuthor>()
-                .HasOne(ba => ba.Book)
-                .WithMany(b => b.BookAuthors)
-                .HasForeignKey(ba => ba.BookId);
-
-            modelBuilder.Entity<BookAuthor>()
-                .HasOne(ba => ba.Author)
-                .WithMany(a => a.BookAuthors)
-                .HasForeignKey(ba => ba.AuthorId);
-
-            modelBuilder.Entity<BookKeyword>()
-                .HasOne(bk => bk.Book)
-                .WithMany(b => b.BookKeywords)
-                .HasForeignKey(bk => bk.BookId);
-
-            modelBuilder.Entity<BookKeyword>()
-                .HasOne(bk => bk.Keyword)
-                .WithMany(k => k.BookKeywords)
-                .HasForeignKey(bk => bk.KeywordId);
-
             modelBuilder.Entity<BookRelation>()
                 .HasOne(br => br.Book)
-                .WithMany(b => b.RelatedToBooks)
+                .WithMany(b => b.RelatedBooks)
                 .HasForeignKey(br => br.BookId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BookRelation>()
                 .HasOne(br => br.RelatedBook)
-                .WithMany(b => b.RelatedFromBooks)
+                .WithMany()
                 .HasForeignKey(br => br.RelatedBookId)
                 .OnDelete(DeleteBehavior.NoAction);
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                        break;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 } 

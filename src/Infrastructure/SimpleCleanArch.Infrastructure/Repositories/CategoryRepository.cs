@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimpleCleanArch.Domain.Entities;
@@ -8,21 +9,39 @@ namespace SimpleCleanArch.Infrastructure.Repositories
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
-        public CategoryRepository(ApplicationDbContext context) : base(context)
+        public CategoryRepository(IApplicationDbContext context) : base(context)
         {
         }
 
-        public async Task<Category> GetCategoryWithBooksAsync(int id)
+        public override async Task<IEnumerable<Category>> GetAllAsync()
         {
-            return await _context.Categories
+            return await _dbSet
+                .Include(c => c.Books)
+                .ToListAsync();
+        }
+
+        public override async Task<Category> GetByIdAsync(int id)
+        {
+            return await _dbSet
                 .Include(c => c.Books)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<Category> GetCategoryBySlugAsync(string slug)
+        public async Task<Category> GetBySlugAsync(string slug)
         {
-            return await _context.Categories
+            return await _dbSet
+                .Include(c => c.Books)
                 .FirstOrDefaultAsync(c => c.Slug == slug);
+        }
+
+        public async Task<Category> GetCategoryWithBooksAsync(int id)
+        {
+            return await _dbSet
+                .Include(c => c.Books)
+                    .ThenInclude(b => b.Author)
+                .Include(c => c.Books)
+                    .ThenInclude(b => b.Keywords)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 } 

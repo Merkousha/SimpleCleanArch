@@ -6,6 +6,6 @@ namespace SimpleCleanArch.Domain.Interfaces
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<Category> GetCategoryWithBooksAsync(int id);
-        Task<Category> GetCategoryBySlugAsync(string slug);
+        Task<Category> GetBySlugAsync(string slug);
     }
 } 

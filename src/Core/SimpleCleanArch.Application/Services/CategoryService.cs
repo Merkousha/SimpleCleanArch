@@ -37,7 +37,7 @@ namespace SimpleCleanArch.Application.Services
 
         public async Task<CategoryDto> GetCategoryBySlugAsync(string slug)
         {
-            var category = await _categoryRepository.GetCategoryBySlugAsync(slug);
+            var category = await _categoryRepository.GetBySlugAsync(slug);
             if (category == null)
                 throw new NotFoundException($"Category with slug '{slug}' not found.");
 

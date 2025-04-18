@@ -10,12 +10,12 @@ using SimpleCleanArch.Infrastructure.Data;
 
 namespace SimpleCleanArch.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly ApplicationDbContext _context;
+        protected readonly IApplicationDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(ApplicationDbContext context)
+        protected Repository(IApplicationDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -31,22 +31,26 @@ namespace SimpleCleanArch.Infrastructure.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.FirstOrDefaultAsync(predicate);
         }
 
-        public virtual async Task AddAsync(T entity)
+        public virtual async Task<bool> ExistsAsync(int id)
         {
-            entity.CreatedAt = DateTime.UtcNow;
+            return await _dbSet.FindAsync(id) != null;
+        }
+
+        public virtual async Task<T> AddAsync(T entity)
+        {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public virtual async Task UpdateAsync(T entity)
         {
-            entity.UpdatedAt = DateTime.UtcNow;
-            _dbSet.Update(entity);
+            _context.Update(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -54,11 +58,6 @@ namespace SimpleCleanArch.Infrastructure.Repositories
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
-        }
-
-        public virtual async Task<bool> ExistsAsync(int id)
-        {
-            return await _dbSet.AnyAsync(e => e.Id == id);
         }
     }
 } 

@@ -4,6 +4,7 @@ using SimpleCleanArch.Application.DTOs;
 using SimpleCleanArch.Application.Interfaces;
 using SimpleCleanArch.Domain.Entities;
 using SimpleCleanArch.Domain.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace SimpleCleanArch.Application.Services
 {
@@ -41,9 +42,37 @@ namespace SimpleCleanArch.Application.Services
 
         public async Task<AuthorDto> CreateAuthorAsync(AuthorCreateDto authorCreateDto)
         {
-            var author = _mapper.Map<Author>(authorCreateDto);
+            var author = new Author
+            {
+                Name = authorCreateDto.Name,
+                Biography = authorCreateDto.Biography,
+                ImageUrl = authorCreateDto.ImageUrl,
+                Slug = GenerateSlug(authorCreateDto.Name)
+            };
+            
             await _authorRepository.AddAsync(author);
+            
             return _mapper.Map<AuthorDto>(author);
+        }
+
+        private static string GenerateSlug(string name)
+        {
+            // Convert to lowercase
+            string slug = name.ToLower();
+            
+            // Remove special characters
+            slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+            
+            // Replace spaces with hyphens
+            slug = Regex.Replace(slug, @"\s+", "-");
+            
+            // Remove multiple hyphens
+            slug = Regex.Replace(slug, @"-+", "-");
+            
+            // Trim hyphens from start and end
+            slug = slug.Trim('-');
+            
+            return slug;
         }
 
         public async Task UpdateAuthorAsync(int id, AuthorUpdateDto authorUpdateDto)

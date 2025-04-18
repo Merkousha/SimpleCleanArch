@@ -1,12 +1,16 @@
-namespace SimpleCleanArch.Domain.Entities
-{
-    public class BookRelation
-    {
-        public int BookId { get; set; }
-        public int RelatedBookId { get; set; }
+using System.ComponentModel.DataAnnotations;
 
-        // Navigation properties
-        public Book Book { get; set; }
-        public Book RelatedBook { get; set; }
-    }
+namespace SimpleCleanArch.Domain.Entities;
+
+public class BookRelation : BaseEntity
+{
+    public int BookId { get; set; }
+    public Book Book { get; set; }
+    
+    public int RelatedBookId { get; set; }
+    public Book RelatedBook { get; set; }
+    
+    [Required]
+    [MaxLength(50)]
+    public string RelationType { get; set; }
 } 

@@ -1,10 +1,16 @@
-namespace SimpleCleanArch.Domain.Entities
-{
-    public class Keyword : BaseEntity
-    {
-        public string Word { get; set; }
+using System.ComponentModel.DataAnnotations;
 
-        // Navigation property
-        public ICollection<BookKeyword> BookKeywords { get; set; }
-    }
+namespace SimpleCleanArch.Domain.Entities;
+
+public class Keyword : BaseEntity
+{
+    [Required]
+    [MaxLength(100)]
+    public string Word { get; set; }
+    
+    [Required]
+    [MaxLength(100)]
+    public string Slug { get; set; }
+    
+    public ICollection<Book> Books { get; set; }
 }

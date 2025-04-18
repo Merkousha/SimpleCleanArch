@@ -6,6 +6,7 @@ using SimpleCleanArch.Application.DTOs;
 using SimpleCleanArch.Application.Interfaces;
 using SimpleCleanArch.Domain.Entities;
 using SimpleCleanArch.Domain.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace SimpleCleanArch.Application.Services
 {
@@ -45,12 +46,33 @@ namespace SimpleCleanArch.Application.Services
         {
             var keyword = new Keyword
             {
-                Word = keywordCreateDto.Word
+                Word = keywordCreateDto.Word,
+                Slug = GenerateSlug(keywordCreateDto.Word)
             };
             
             await _keywordRepository.AddAsync(keyword);
             
             return _mapper.Map<KeywordDto>(keyword);
+        }
+
+        private static string GenerateSlug(string word)
+        {
+            // Convert to lowercase
+            string slug = word.ToLower();
+            
+            // Remove special characters
+            slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+            
+            // Replace spaces with hyphens
+            slug = Regex.Replace(slug, @"\s+", "-");
+            
+            // Remove multiple hyphens
+            slug = Regex.Replace(slug, @"-+", "-");
+            
+            // Trim hyphens from start and end
+            slug = slug.Trim('-');
+            
+            return slug;
         }
 
         public async Task UpdateKeywordAsync(KeywordDto keywordDto)

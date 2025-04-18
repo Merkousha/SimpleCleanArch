@@ -7,8 +7,8 @@ namespace SimpleCleanArch.Application.Validators
     {
         public AuthorDtoValidator()
         {
-            RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("Full name is required")
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage("Name is required")
                 .MaximumLength(100).WithMessage("Full name cannot exceed 100 characters");
 
             RuleFor(x => x.Slug)
@@ -17,4 +17,4 @@ namespace SimpleCleanArch.Application.Validators
                 .Matches("^[a-z0-9]+(?:-[a-z0-9]+)*$").WithMessage("Slug must be in valid format (lowercase letters, numbers, and hyphens)");
         }
     }
-} 
+}
