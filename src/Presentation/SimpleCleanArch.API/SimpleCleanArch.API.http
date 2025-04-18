@@ -1,0 +1,157 @@
+@SimpleCleanArch.API_HostAddress = http://localhost:5190
+
+### Get all books
+GET {{SimpleCleanArch.API_HostAddress}}/api/books
+Accept: application/json
+
+### Get book by id
+GET {{SimpleCleanArch.API_HostAddress}}/api/books/1
+Accept: application/json
+
+### Get book by slug
+GET {{SimpleCleanArch.API_HostAddress}}/api/books/slug/sample-book
+Accept: application/json
+
+### Get books by category
+GET {{SimpleCleanArch.API_HostAddress}}/api/books/category/1
+Accept: application/json
+
+### Get books by author
+GET {{SimpleCleanArch.API_HostAddress}}/api/books/author/1
+Accept: application/json
+
+### Create a new book
+POST {{SimpleCleanArch.API_HostAddress}}/api/books
+Content-Type: application/json
+
+{
+    "title": "Sample Book",
+    "description": "A sample book description",
+    "isbn": "978-0-7475-3269-9",
+    "publishedDate": "2024-04-18",
+    "price": 29.99,
+    "authorIds": [1],
+    "categoryIds": [1],
+    "keywords": ["sample", "book"]
+}
+
+### Update a book
+PUT {{SimpleCleanArch.API_HostAddress}}/api/books/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "title": "Updated Book Title",
+    "description": "Updated book description",
+    "isbn": "978-0-7475-3269-9",
+    "publishedDate": "2024-04-18",
+    "price": 39.99,
+    "authorIds": [1],
+    "categoryIds": [1],
+    "keywords": ["updated", "book"]
+}
+
+### Delete a book
+DELETE {{SimpleCleanArch.API_HostAddress}}/api/books/1
+
+### Get all authors
+GET {{SimpleCleanArch.API_HostAddress}}/api/authors
+Accept: application/json
+
+### Get author by id
+GET {{SimpleCleanArch.API_HostAddress}}/api/authors/1
+Accept: application/json
+
+### Get authors by book
+GET {{SimpleCleanArch.API_HostAddress}}/api/authors/book/1
+Accept: application/json
+
+### Create a new author
+POST {{SimpleCleanArch.API_HostAddress}}/api/authors
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "biography": "A sample author biography",
+    "birthDate": "1980-01-01"
+}
+
+### Update an author
+PUT {{SimpleCleanArch.API_HostAddress}}/api/authors/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "John Updated Doe",
+    "biography": "Updated author biography",
+    "birthDate": "1980-01-01"
+}
+
+### Delete an author
+DELETE {{SimpleCleanArch.API_HostAddress}}/api/authors/1
+
+### Get all categories
+GET {{SimpleCleanArch.API_HostAddress}}/api/categories
+Accept: application/json
+
+### Get category by id
+GET {{SimpleCleanArch.API_HostAddress}}/api/categories/1
+Accept: application/json
+
+### Get category by slug
+GET {{SimpleCleanArch.API_HostAddress}}/api/categories/slug/sample-category
+Accept: application/json
+
+### Create a new category
+POST {{SimpleCleanArch.API_HostAddress}}/api/categories
+Content-Type: application/json
+
+{
+    "name": "Sample Category",
+    "description": "A sample category description"
+}
+
+### Update a category
+PUT {{SimpleCleanArch.API_HostAddress}}/api/categories/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Updated Category",
+    "description": "Updated category description"
+}
+
+### Delete a category
+DELETE {{SimpleCleanArch.API_HostAddress}}/api/categories/1
+
+### Get all keywords
+GET {{SimpleCleanArch.API_HostAddress}}/api/keywords
+Accept: application/json
+
+### Get keyword by id
+GET {{SimpleCleanArch.API_HostAddress}}/api/keywords/1
+Accept: application/json
+
+### Get keywords by book
+GET {{SimpleCleanArch.API_HostAddress}}/api/keywords/book/1
+Accept: application/json
+
+### Create a new keyword
+POST {{SimpleCleanArch.API_HostAddress}}/api/keywords
+Content-Type: application/json
+
+{
+    "word": "sample-keyword"
+}
+
+### Update a keyword
+PUT {{SimpleCleanArch.API_HostAddress}}/api/keywords/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "word": "updated-keyword"
+}
+
+### Delete a keyword
+DELETE {{SimpleCleanArch.API_HostAddress}}/api/keywords/1
